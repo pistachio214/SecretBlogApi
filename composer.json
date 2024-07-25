@@ -33,7 +33,9 @@
     "webman/gateway-worker": "^1.0",
     "psr/container": "^2.0",
     "php-di/php-di": "^7.0",
-    "doctrine/annotations": "^2.0"
+    "doctrine/annotations": "^2.0",
+    "illuminate/redis": "^10.48",
+    "illuminate/events": "^10.48"
   },
   "suggest": {
     "ext-event": "For better performance. "

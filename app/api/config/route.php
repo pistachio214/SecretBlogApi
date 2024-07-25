@@ -14,10 +14,14 @@
 
 use Webman\Route;
 
-use app\api\controller\AppBannerController;
+use app\api\controller\MainDynamicController;
 
 
 Route::group('/api', function () {
 
-    Route::get("", [AppBannerController::class, 'index']);
+    Route::group('/main-dynamic', function () {
+        Route::get("/banner", [MainDynamicController::class, 'banner']);
+    });
+
+
 });
