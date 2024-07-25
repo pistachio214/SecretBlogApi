@@ -12,4 +12,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-return [];
+use Psr\Container\ContainerInterface;
+
+return [
+    \app\service\AppMainService::class => function (ContainerInterface $container) {
+        return $container->get(\app\service\impl\AppMainServiceImpl::class);
+    }
+];

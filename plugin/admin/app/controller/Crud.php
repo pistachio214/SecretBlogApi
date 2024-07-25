@@ -2,12 +2,14 @@
 
 namespace plugin\admin\app\controller;
 
+use app\utils\SnowflakeUtil;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
 use support\exception\BusinessException;
+use support\Log;
 use support\Model;
 use support\Request;
 use support\Response;
@@ -29,6 +31,8 @@ class Crud extends Base
     public function select(Request $request): Response
     {
         [$where, $format, $limit, $field, $order] = $this->selectInput($request);
+
+        Log::info(json_encode($where));
         $query = $this->doSelect($where, $field, $order);
         return $this->doFormat($query, $format, $limit);
     }
@@ -47,6 +51,20 @@ class Crud extends Base
     }
 
     /**
+     * 含雪花ID的添加
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function snowflakeInsert(Request $request): Response
+    {
+        $data = $this->insertInput($request);
+        $id = $this->doSnowflakeInsert($data);
+
+        return $this->json(0, 'ok', ['id' => $id]);
+    }
+
+    /**
      * 更新
      * @param Request $request
      * @return Response
@@ -55,6 +73,8 @@ class Crud extends Base
     public function update(Request $request): Response
     {
         [$id, $data] = $this->updateInput($request);
+        Log::info(json_encode($id));
+        Log::info(json_encode($data));
         $this->doUpdate($id, $data);
         return $this->json(0);
     }
@@ -128,7 +148,7 @@ class Crud extends Base
      * @param string $order
      * @return EloquentBuilder|QueryBuilder|Model
      */
-    protected function doSelect(array $where, string $field = null, string $order= 'desc')
+    protected function doSelect(array $where, string $field = null, string $order = 'desc')
     {
         $model = $this->model;
         foreach ($where as $column => $value) {
@@ -149,7 +169,7 @@ class Crud extends Base
                         $valArr = explode(",", trim($value[1]));
                     }
                     $model = $model->whereNotIn($column, $valArr);
-                }elseif ($value[0] == 'null') {
+                } elseif ($value[0] == 'null') {
                     $model = $model->whereNull($column);
                 } elseif ($value[0] == 'not null') {
                     $model = $model->whereNotNull($column);
@@ -231,6 +251,25 @@ class Crud extends Base
      */
     protected function doInsert(array $data)
     {
+        $primary_key = $this->model->getKeyName();
+        $model_class = get_class($this->model);
+        $model = new $model_class;
+        foreach ($data as $key => $val) {
+            $model->{$key} = $val;
+        }
+        $model->save();
+        return $primary_key ? $model->$primary_key : null;
+    }
+
+    /**
+     * 执行插入
+     * @param array $data
+     * @return mixed|null
+     */
+    protected function doSnowflakeInsert(array $data): mixed
+    {
+        $data['id'] = SnowflakeUtil::getId();
+
         $primary_key = $this->model->getKeyName();
         $model_class = get_class($this->model);
         $model = new $model_class;
@@ -352,7 +391,7 @@ class Crud extends Base
             throw new BusinessException('该表无主键，不支持删除');
         }
         $ids = (array)$request->post($primary_key, []);
-        if (!Auth::isSuperAdmin()){
+        if (!Auth::isSuperAdmin()) {
             if ($this->dataLimit) {
                 $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
             }
@@ -430,7 +469,7 @@ class Crud extends Base
                 'value' => $item->id
             ];
         }
-        return  $this->json(0, 'ok', $formatted_items);
+        return $this->json(0, 'ok', $formatted_items);
     }
 
     /**
