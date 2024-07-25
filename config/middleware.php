@@ -12,4 +12,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-return [];
+return [
+
+    'api' => [
+        \app\middleware\ResponseConvertNameToCamelMiddleware::class,
+    ]
+];
