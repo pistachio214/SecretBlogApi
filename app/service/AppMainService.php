@@ -2,7 +2,9 @@
 
 namespace app\service;
 
+use Illuminate\Database\Eloquent\Collection;
+
 interface AppMainService
 {
-    public function mainDynamicBannerList();
+    public function mainDynamicBannerList(): Collection;
 }

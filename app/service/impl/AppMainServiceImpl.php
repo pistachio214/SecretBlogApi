@@ -2,13 +2,21 @@
 
 namespace app\service\impl;
 
+use app\model\AppBannerModel;
 use app\service\AppMainService;
-use support\Log;
+
+use Illuminate\Database\Eloquent\Collection;
+use DI\Attribute\Inject;
 
 class AppMainServiceImpl implements AppMainService
 {
-    public function mainDynamicBannerList()
+    #[Inject]
+    protected AppBannerModel $appBannerModel;
+
+    public function mainDynamicBannerList(): Collection
     {
-        Log::info("这里就是贫血模式抽象出来的实现类");
+        return $this->appBannerModel->where(['type' => 1])
+            ->orderByDesc('created_at')
+            ->get(['id', 'title', 'remarks', 'image', 'arguments', 'created_at']);
     }
 }
