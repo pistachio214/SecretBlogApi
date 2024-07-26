@@ -3,9 +3,10 @@
 namespace app\service\impl;
 
 use app\model\AppBannerModel;
+use app\model\PostModel;
 use app\service\AppMainService;
 
-use app\utils\SnowflakeUtil;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use DI\Attribute\Inject;
 
@@ -13,6 +14,9 @@ class AppMainServiceImpl implements AppMainService
 {
     #[Inject]
     protected AppBannerModel $appBannerModel;
+
+    #[Inject]
+    protected PostModel $postModel;
 
     public function mainDynamicBannerList(): Collection
     {
@@ -22,9 +26,16 @@ class AppMainServiceImpl implements AppMainService
             ->get(['id', 'title', 'remarks', 'image', 'arguments', 'created_at']);
     }
 
-    public function deleteBanner(string $id): void
+    public function mainDynamicPostList(int $page): LengthAwarePaginator
     {
-        $this->appBannerModel->newQuery()->where(['id' => $id])->delete();
+        return $this->postModel->newQuery()
+            ->with([
+                'users' => function ($query) {
+                    $query->select('id', 'nickname', 'avatar');
+                }
+            ])
+            ->orderByDesc('created_at')
+            ->paginate(15, ['*'], 'page', $page);
     }
 
 

@@ -14,15 +14,14 @@ class MainDynamicController
     #[Inject]
     protected AppMainService $appMainService;
 
-    public function banner(Request $request): Response
+    public function bannerList(Request $request): Response
     {
         return R::SUCCESS($this->appMainService->mainDynamicBannerList());
     }
 
-    public function delete(string $id): Response
+    public function postList(Request $request): Response
     {
-        $this->appMainService->deleteBanner($id);
-        return R::SUCCESS();
+//        return ['id' => 1, 'name' => 2];
+        return R::SUCCESS($this->appMainService->mainDynamicPostList($request->get('page', 1)));
     }
-
 }

@@ -2,7 +2,10 @@
 
 namespace app\middleware;
 
+use app\dto\LengthAwarePaginatorDto;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use stdClass;
+use support\Log;
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
@@ -13,15 +16,31 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
     {
         $response = $handler($request);
 
-        $body = json_decode($response->rawBody(), true);
+        $body = json_decode($response->rawBody());
 
-        if (isset($body['data']) && !empty($body['data'])) {
-            $body['data'] = $this->convertToCamelCaseRecursive($body['data']);
+        // 转化下分页数据的格式
+        $body_data = $this->convertToLengthAwarePaginator($body->data);
+
+        if (isset($body_data) && !empty($body_data)) {
+            Log::info("进来没: " . json_encode($body_data));
+            $body->data = $this->convertToCamelCaseRecursive($body_data);
 
             $response->withBody(json_encode($body));
         }
 
         return $response;
+    }
+
+    private function convertToLengthAwarePaginator($variable): mixed
+    {
+        $target = unserialize($variable);
+
+        if ($target instanceof LengthAwarePaginator) {
+            return new LengthAwarePaginatorDto($target);
+        }
+
+        return json_decode(json_encode($target));
+
     }
 
     private function convertToCamelCaseRecursive($variable): stdClass|array
@@ -67,6 +86,5 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
         }
         return $camelCase;
     }
-
 
 }

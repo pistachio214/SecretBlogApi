@@ -20,10 +20,8 @@ use app\api\controller\MainDynamicController;
 Route::group('/api', function () {
 
     Route::group('/main-dynamic', function () {
-        Route::get("/banner", [MainDynamicController::class, 'banner']);
-        Route::get("/banner/delete/{id}", [MainDynamicController::class, 'delete']);
-
-
+        Route::get("/banner", [MainDynamicController::class, 'bannerList']);
+        Route::get("/post", [MainDynamicController::class, 'postList']);
     });
 
 
