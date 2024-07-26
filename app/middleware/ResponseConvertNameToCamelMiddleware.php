@@ -2,10 +2,9 @@
 
 namespace app\middleware;
 
+use stdClass;
 use app\dto\LengthAwarePaginatorDto;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use stdClass;
-use support\Log;
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
 use Webman\Http\Request;
@@ -46,7 +45,7 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
 
     }
 
-    private function convertToCamelCaseRecursive($variable): stdClass|array|string|int
+    private function convertToCamelCaseRecursive(mixed $variable): mixed
     {
         if (is_array($variable) && $variable != null) {
             $newArray = [];
