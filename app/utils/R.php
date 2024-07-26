@@ -7,7 +7,7 @@ use  support\Response;
 class R
 {
 
-    public static function SUCCESS(mixed $data = null, int $code = 200, string $message = 'Access successful'): Response
+    public static function success(mixed $data = null, int $code = 200, string $message = 'Successful'): Response
     {
         return json([
             'code' => $code,
@@ -16,7 +16,7 @@ class R
         ]);
     }
 
-    public static function ERROR(string $message = 'Access failure', int $code = 500, mixed $data = null): Response
+    public static function error(string $message = 'Failure', int $code = 500, mixed $data = null): Response
     {
         return json([
             'code' => $code,

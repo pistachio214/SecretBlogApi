@@ -18,5 +18,5 @@ interface AppMainService
 
 
     //TODO 首页推荐 - 帖子列表
-    public function mainDynamicPostList(int $page): LengthAwarePaginator;
+    public function mainDynamicPostList(string $title = null): LengthAwarePaginator;
 }

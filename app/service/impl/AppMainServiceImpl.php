@@ -26,16 +26,22 @@ class AppMainServiceImpl implements AppMainService
             ->get(['id', 'title', 'remarks', 'image', 'arguments', 'created_at']);
     }
 
-    public function mainDynamicPostList(int $page): LengthAwarePaginator
+    public function mainDynamicPostList(string $title = null): LengthAwarePaginator
     {
         return $this->postModel->newQuery()
+            ->when($title, function ($query) use ($title) {
+                return $query->where('title', 'like', "%$title%");
+            })
             ->with([
                 'users' => function ($query) {
                     $query->select('id', 'nickname', 'avatar');
+                },
+                'images' => function ($query) {
+                    $query->where('type', 1)->select('post_id', 'url')->orderBy('created_at');
                 }
             ])
             ->orderByDesc('created_at')
-            ->paginate(15, ['*'], 'page', $page);
+            ->paginate(15);
     }
 
 

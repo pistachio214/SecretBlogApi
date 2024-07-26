@@ -16,12 +16,11 @@ class MainDynamicController
 
     public function bannerList(Request $request): Response
     {
-        return R::SUCCESS($this->appMainService->mainDynamicBannerList());
+        return R::success($this->appMainService->mainDynamicBannerList());
     }
 
     public function postList(Request $request): Response
     {
-//        return ['id' => 1, 'name' => 2];
-        return R::SUCCESS($this->appMainService->mainDynamicPostList($request->get('page', 1)));
+        return R::success($this->appMainService->mainDynamicPostList($request->get('title')));
     }
 }
