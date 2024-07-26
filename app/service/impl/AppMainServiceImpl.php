@@ -16,25 +16,6 @@ class AppMainServiceImpl implements AppMainService
 
     public function mainDynamicBannerList(): Collection
     {
-//        $create_data_model = new AppBannerModel();
-//        $create_data_model->id = SnowflakeUtil::getId();
-//        $create_data_model->title = '首页轮播10';
-//        $create_data_model->type = 1;
-//        $create_data_model->remarks = '备注首页轮播1';
-//        $create_data_model->image = 'http://192.168.2.109:9000/sexy-talk/index_banner.png';
-//        $create_data_model->arguments = null;
-
-//        $create_data = [
-//            'id' => SnowflakeUtil::getId(),
-//            'title' => '首页轮播1',
-//            'type' => 1,
-//            'remarks' => '备注首页轮播1',
-//            'image' => 'http://192.168.2.109:9000/sexy-talk/index_banner.png',
-//            'arguments' => null
-//        ];
-
-//        $create_data_model->save();
-
         return $this->appBannerModel->newQuery()
             ->where(['type' => 1])
             ->orderByDesc('created_at')

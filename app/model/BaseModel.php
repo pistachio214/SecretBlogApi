@@ -2,6 +2,7 @@
 
 namespace app\model;
 
+use app\utils\SnowflakeUtil;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use support\Model;
@@ -17,6 +18,15 @@ class BaseModel extends Model
     public $timestamps = true;
 
     protected $guarded = ['created_at', 'updated_at', 'deleted_at'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = SnowflakeUtil::getId();
+        });
+    }
 
     /**
      * 访问器: 格式化 created_at日期
