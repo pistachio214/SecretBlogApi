@@ -19,4 +19,10 @@ class MainDynamicController
         return R::SUCCESS($this->appMainService->mainDynamicBannerList());
     }
 
+    public function delete(string $id): Response
+    {
+        $this->appMainService->deleteBanner($id);
+        return R::SUCCESS();
+    }
+
 }

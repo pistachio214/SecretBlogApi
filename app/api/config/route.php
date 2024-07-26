@@ -21,6 +21,9 @@ Route::group('/api', function () {
 
     Route::group('/main-dynamic', function () {
         Route::get("/banner", [MainDynamicController::class, 'banner']);
+        Route::get("/banner/delete/{id}", [MainDynamicController::class, 'delete']);
+
+
     });
 
 

@@ -15,9 +15,11 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
 
         $body = json_decode($response->rawBody(), true);
 
-        $body['data'] = $this->convertToCamelCaseRecursive($body['data']);
+        if (isset($body['data']) && !empty($body['data'])) {
+            $body['data'] = $this->convertToCamelCaseRecursive($body['data']);
 
-        $response->withBody(json_encode($body));
+            $response->withBody(json_encode($body));
+        }
 
         return $response;
     }
