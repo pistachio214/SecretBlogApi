@@ -30,7 +30,7 @@ CREATE TABLE `post`
 
     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `is_delete`  int(11) DEFAULT '1',
+    `deleted_at` timestamp             DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE,
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子表';
@@ -45,7 +45,7 @@ CREATE TABLE `post_files`
 
     `created_at` timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `is_delete`  int(11) DEFAULT '1',
+    `deleted_at` timestamp              DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE,
     FOREIGN KEY (`post_id`) REFERENCES `post` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子附件表';
@@ -65,7 +65,7 @@ CREATE TABLE `post_reply_message`
 
     `created_at`   timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at`   timestamp     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `is_delete`    int(11) DEFAULT '1',
+    `deleted_at`   timestamp              DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE,
     FOREIGN KEY (`post_id`) REFERENCES `post` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子回帖信息表';
