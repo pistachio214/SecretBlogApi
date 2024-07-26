@@ -12,7 +12,7 @@ class R
         return json([
             'code' => $code,
             'message' => $message,
-            'data' => serialize($data)
+            'data' => $data != null ? serialize($data) : null
         ]);
     }
 
@@ -21,7 +21,7 @@ class R
         return json([
             'code' => $code,
             'message' => $message,
-            'data' => serialize($data)
+            'data' => $data != null ? serialize($data) : null
         ]);
     }
 }

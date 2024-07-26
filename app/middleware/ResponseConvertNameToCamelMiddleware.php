@@ -22,7 +22,6 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
         $body_data = $this->convertToLengthAwarePaginator($body->data);
 
         if (isset($body_data) && !empty($body_data)) {
-            Log::info("进来没: " . json_encode($body_data));
             $body->data = $this->convertToCamelCaseRecursive($body_data);
 
             $response->withBody(json_encode($body));
@@ -33,6 +32,10 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
 
     private function convertToLengthAwarePaginator($variable): mixed
     {
+        if ($variable == null) {
+            return null;
+        }
+
         $target = unserialize($variable);
 
         if ($target instanceof LengthAwarePaginator) {
@@ -43,9 +46,9 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
 
     }
 
-    private function convertToCamelCaseRecursive($variable): stdClass|array
+    private function convertToCamelCaseRecursive($variable): stdClass|array|string|int
     {
-        if (is_array($variable)) {
+        if (is_array($variable) && $variable != null) {
             $newArray = [];
             foreach ($variable as $key => $value) {
                 $camelCaseKey = $this->toCamelCase($key);
@@ -56,7 +59,7 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
                 }
             }
             return $newArray;
-        } elseif (is_object($variable)) {
+        } elseif (is_object($variable) && $variable != null) {
             $newObject = new stdClass();
             foreach (get_object_vars($variable) as $key => $value) {
                 $camelCaseKey = $this->toCamelCase($key);
