@@ -34,7 +34,10 @@ class AppMainServiceImpl implements AppMainService
             })
             ->with([
                 'users' => function ($query) {
-                    $query->select('id', 'nickname', 'avatar');
+                    $query->select('id', 'nickname', 'avatar')
+                        ->with(['userExtend' => function ($q) {
+                            $q->select('user_id', 'signature');
+                        }]);
                 },
                 'images' => function ($query) {
                     $query->where('type', 1)->select('post_id', 'url')->orderBy('created_at');

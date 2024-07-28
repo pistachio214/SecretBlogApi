@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class PostModel extends BaseModel
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'post';
 
     /**

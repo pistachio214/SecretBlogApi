@@ -1,3 +1,35 @@
+DROP TABLE IF EXISTS `sys_user_extend`;
+CREATE TABLE `sys_user_extend`
+(
+    `id`         bigint(20) NOT NULL COMMENT '编号',
+    `user_id`    bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+    `sex`        int(11) DEFAULT '1' COMMENT '性别: 0女;1男;2未知',
+    `signature`  varchar(100) NOT NULL COMMENT '个人签名',
+    `bg_image`   text COMMENT '背景图片',
+
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp             DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='系统用户补充数据表';
+
+DROP TABLE IF EXISTS `sys_user_files`;
+CREATE TABLE `sys_user_files`
+(
+    `id`         bigint(20) NOT NULL COMMENT '编号',
+    `user_id`    bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+
+    `url`        varchar(1000) NOT NULL COMMENT '文件地址',
+    `type`       int(1) DEFAULT '1' COMMENT '附件类型 1:图片 2视频',
+
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp             DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='系统用户附件表';
+
 DROP TABLE IF EXISTS `app_banner`;
 CREATE TABLE `app_banner`
 (

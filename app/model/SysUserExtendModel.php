@@ -2,15 +2,20 @@
 
 namespace app\model;
 
+use support\Model;
 
-class AppBannerModel extends BaseModel
+/**
+ *
+ */
+class SysUserExtendModel extends BaseModel
 {
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'app_banner';
+    protected $table = 'sys_user_extend';
+
 
 }
