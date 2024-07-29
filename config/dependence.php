@@ -14,8 +14,17 @@
 
 use Psr\Container\ContainerInterface;
 
+use app\service\AppMainService;
+use app\service\impl\AppMainServiceImpl;
+
+use app\service\PostService;
+use app\service\impl\PostServiceImpl;
+
 return [
-    \app\service\AppMainService::class => function (ContainerInterface $container) {
-        return $container->get(\app\service\impl\AppMainServiceImpl::class);
-    }
+    AppMainService::class => function (ContainerInterface $container) {
+        return $container->get(AppMainServiceImpl::class);
+    },
+    PostService::class => function (ContainerInterface $container) {
+        return $container->get(PostServiceImpl::class);
+    },
 ];

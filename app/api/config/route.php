@@ -16,9 +16,8 @@ use Webman\Route;
 
 use app\api\controller\TestController;
 
-
+use app\api\controller\PostController;
 use app\api\controller\MainDynamicController;
-
 
 Route::group('/api', function () {
 
@@ -27,6 +26,11 @@ Route::group('/api', function () {
     Route::group('/main-dynamic', function () {
         Route::get("/banner", [MainDynamicController::class, 'bannerList']);
         Route::get("/post", [MainDynamicController::class, 'postList']);
+    });
+
+    Route::group('/post', function () {
+        Route::get('/{id:\d+}', [PostController::class, 'detail']);
+        Route::get('/reply/{id}', [PostController::class, 'replyMessage']);
     });
 
 
