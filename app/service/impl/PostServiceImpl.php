@@ -18,6 +18,11 @@ class PostServiceImpl implements PostService
     #[Inject]
     protected PostReplyMessageModel $postReplyMessageModel;
 
+    public function createPost()
+    {
+        // TODO: Implement createPost() method.
+    }
+
     public function postDetail(string $id): ?Model
     {
         return $this->postModel->newQuery()
@@ -35,7 +40,6 @@ class PostServiceImpl implements PostService
                     $query->select('post_id', 'url', 'type');
                 }
             ])
-
             ->first();
     }
 

@@ -19,19 +19,18 @@ use app\api\controller\TestController;
 use app\api\controller\PostController;
 use app\api\controller\MainDynamicController;
 
+
+Route::get('/api/test', [TestController::class, 'test']);
+
 Route::group('/api', function () {
-
-    Route::get('/test', [TestController::class, 'test']);
-
     Route::group('/main-dynamic', function () {
         Route::get("/banner", [MainDynamicController::class, 'bannerList']);
         Route::get("/post", [MainDynamicController::class, 'postList']);
     });
 
     Route::group('/post', function () {
+        Route::post('', [PostController::class, 'create']);
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
         Route::get('/reply/{id:\d+}', [PostController::class, 'replyMessage']);
     });
-
-
-});
+})->middleware();

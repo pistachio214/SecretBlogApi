@@ -13,6 +13,11 @@ class PostController
     #[Inject]
     protected PostService $postService;
 
+    public function create(Request $request): Response
+    {
+        return R::success();
+    }
+
     public function detail(Request $request, string $id): Response
     {
         return R::success($this->postService->postDetail($id));

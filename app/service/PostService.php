@@ -8,6 +8,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 interface PostService
 {
 
+    // TODO 发帖
+    public function createPost();
+
     /**
      * 帖子基本详情
      * @param string $id
@@ -18,7 +21,15 @@ interface PostService
      */
     public function postDetail(string $id): ?Model;
 
-    //TODO 帖子的回复信息
+    /**
+     * 回帖信息
+     * @param string $id
+     * @return LengthAwarePaginator
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-07-29 14:08:56
+     */
     public function postReplyMessage(string $id): LengthAwarePaginator;
+
 
 }
