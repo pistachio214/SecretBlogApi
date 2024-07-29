@@ -13,12 +13,12 @@ class PostController
     #[Inject]
     protected PostService $postService;
 
-    public function detail(Request $request, int $id): Response
+    public function detail(Request $request, string $id): Response
     {
         return R::success($this->postService->postDetail($id));
     }
 
-    public function replyMessage(Request $request, int $id): Response
+    public function replyMessage(Request $request, string $id): Response
     {
         return R::success($this->postService->postReplyMessage($id));
     }

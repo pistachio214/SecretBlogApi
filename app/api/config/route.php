@@ -30,7 +30,7 @@ Route::group('/api', function () {
 
     Route::group('/post', function () {
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
-        Route::get('/reply/{id}', [PostController::class, 'replyMessage']);
+        Route::get('/reply/{id:\d+}', [PostController::class, 'replyMessage']);
     });
 
 
