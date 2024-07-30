@@ -34,8 +34,10 @@ class RequestValidateMiddleware implements MiddlewareInterface
                     $instance = $reflectionClass->newInstanceWithoutConstructor();
                     // 如果类有构造函数且需要参数，则可能需要手动处理或使用newInstanceArgs()（PHP 8.0中已弃用）
                 }
+                if (method_exists($instance, 'verify')) {
+                    $instance->verify($request);
+                }
 
-                $instance->verify($request);
             }
         }
 

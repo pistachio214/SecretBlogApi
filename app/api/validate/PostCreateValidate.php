@@ -20,7 +20,6 @@ class PostCreateValidate extends Validate
         'title.max' => '帖子标题最多不能超过25个字',
         'content.require' => '帖子内容是必填项',
         'content.max' => '帖子标题最多不能超过25个字',
-
     ];
 
     /**
@@ -28,7 +27,6 @@ class PostCreateValidate extends Validate
      */
     public function verify(Request $request): void
     {
-
         throw_unless($this->check($request->all()), ApiBusinessException::class, $this->getError());
     }
 }
