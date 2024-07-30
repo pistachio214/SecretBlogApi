@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use support\Db;
 use support\Request;
+use Throwable;
 use Webman\Context;
 
 class PostServiceImpl implements PostService
@@ -65,7 +66,7 @@ class PostServiceImpl implements PostService
             }
 
             Db::commit();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             Db::rollBack();
             throw new ApiBusinessException("发帖失败!请检查您的发贴信息是否合法！", $exception->getMessage());
         }
@@ -91,12 +92,15 @@ class PostServiceImpl implements PostService
             ->first();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function createPostReplyMessage(Request $request): void
     {
         $data = $request->only(['post_id', 'parent_id', 'content', 'image']);
 
         $postExists = $this->postModel->newQuery()->where(['id', $data['post_id']])->exists();
-        throw_unless($postExists, ApiBusinessException::class, '秘博不存在,请刷新重新进入', null);
+        throw_unless($postExists, ApiBusinessException::class, '秘贴不存在,请刷新重新进入', null);
 
         $userContext = Context::get('user');
 
