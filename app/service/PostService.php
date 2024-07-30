@@ -4,12 +4,19 @@ namespace app\service;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use support\Request;
 
 interface PostService
 {
 
-    // TODO 发帖
-    public function createPost();
+    /**
+     * 发帖
+     * @param Request $request
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-07-29 15:48:09
+     */
+    public function createPost(Request $request): void;
 
     /**
      * 帖子基本详情
@@ -21,8 +28,11 @@ interface PostService
      */
     public function postDetail(string $id): ?Model;
 
+    //TODO 回帖信息
+    public function createPostReplyMessage(Request $request): void;
+
     /**
-     * 回帖信息
+     * 回帖信息列表
      * @param string $id
      * @return LengthAwarePaginator
      *

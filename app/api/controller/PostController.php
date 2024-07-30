@@ -15,12 +15,19 @@ class PostController
 
     public function create(Request $request): Response
     {
+        $this->postService->createPost($request);
         return R::success();
     }
 
     public function detail(Request $request, string $id): Response
     {
         return R::success($this->postService->postDetail($id));
+    }
+
+    public function createReplyMessage(Request $request): Response
+    {
+        $this->postService->createPostReplyMessage($request);
+        return R::success();
     }
 
     public function replyMessage(Request $request, string $id): Response

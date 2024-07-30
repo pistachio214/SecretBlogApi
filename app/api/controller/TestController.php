@@ -2,12 +2,14 @@
 
 namespace app\api\controller;
 
+use app\api\validate\TestTestValidate;
 use app\model\PostReplyMessageModel;
 use app\model\SysUserExtendModel;
 use app\model\SysUserFilesModel;
 use app\utils\R;
 use support\Request;
 use support\Response;
+use Webman\Context;
 
 class TestController
 {
@@ -15,13 +17,8 @@ class TestController
     public function test(Request $request): Response
     {
 //        $userId = '1689541974618537989';
-//
-//        $file_data = $this->getImagesArray();
-//
-//        $this->createUser($userId, $file_data);
 
-        $this->createPostReplyMessage();
-        return R::success();
+        return R::success($request->all());
     }
 
     private function createPostReplyMessage(): void

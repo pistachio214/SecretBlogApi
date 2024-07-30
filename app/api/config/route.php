@@ -14,6 +14,8 @@
 
 use Webman\Route;
 
+use app\middleware\RequestApiAuthCheckMiddleware;
+
 use app\api\controller\TestController;
 
 use app\api\controller\PostController;
@@ -31,6 +33,7 @@ Route::group('/api', function () {
     Route::group('/post', function () {
         Route::post('', [PostController::class, 'create']);
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
+        Route::post('/reply', [PostController::class, 'createReplyMessage']);
         Route::get('/reply/{id:\d+}', [PostController::class, 'replyMessage']);
     });
-})->middleware();
+})->middleware([RequestApiAuthCheckMiddleware::class]);

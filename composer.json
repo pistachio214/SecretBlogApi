@@ -39,7 +39,8 @@
     "illuminate/database": "^10.48",
     "illuminate/pagination": "^10.48",
     "symfony/var-dumper": "^6.4",
-    "symfony/cache": "^6.4"
+    "symfony/cache": "^6.4",
+    "topthink/think-validate": "^2.0"
   },
   "suggest": {
     "ext-event": "For better performance. "

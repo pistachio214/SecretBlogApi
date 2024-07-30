@@ -14,6 +14,10 @@
 
 return [
 
+    '' => [
+        \app\middleware\RequestValidateMiddleware::class,
+    ],
+
     'api' => [
         \app\middleware\ResponseConvertNameToCamelMiddleware::class,
     ]
