@@ -25,19 +25,10 @@ class RequestValidateMiddleware implements MiddlewareInterface
                 // 获取类的反射对象  
                 $reflectionClass = new ReflectionClass($validateClassName);
 
-                // 使用newInstance()方法实例化对象
-                if (method_exists($reflectionClass, 'newInstance')) {
-                    // PHP 7.x 及更早版本
-                    $instance = $reflectionClass->newInstance();
-                } else {
-                    // PHP 8.0 及以上版本
-                    $instance = $reflectionClass->newInstanceWithoutConstructor();
-                    // 如果类有构造函数且需要参数，则可能需要手动处理或使用newInstanceArgs()（PHP 8.0中已弃用）
-                }
-                if (method_exists($instance, 'verify')) {
-                    $instance->verify($request);
-                }
-
+                // 如果类有构造函数且需要参数，则可能需要手动处理或使用newInstanceArgs()
+                $reflectionClass->newInstanceArgs([
+                    $request
+                ]);
             }
         }
 

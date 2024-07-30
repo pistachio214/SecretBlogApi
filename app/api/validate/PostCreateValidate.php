@@ -9,7 +9,6 @@ use Throwable;
 
 class PostCreateValidate extends Validate
 {
-
     protected $rule = [
         'title' => 'require|max:25',
         'content' => 'require|max:300',
@@ -25,7 +24,7 @@ class PostCreateValidate extends Validate
     /**
      * @throws Throwable
      */
-    public function verify(Request $request): void
+    public function __construct(Request $request)
     {
         throw_unless($this->check($request->all()), ApiBusinessException::class, $this->getError());
     }
