@@ -105,3 +105,18 @@ CREATE TABLE `post_reply_message`
     FOREIGN KEY (`reply_id`) REFERENCES `sys_user` (`id`),
     FOREIGN KEY (`receive_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子回帖信息表';
+
+DROP TABLE IF EXISTS `post_like`;
+CREATE TABLE `post_like`
+(
+    `id`         bigint(20) NOT NULL COMMENT '编号',
+    `post_id`    bigint(20) NOT NULL COMMENT '帖子表(post)外键',
+    `user_id`    bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp          DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子点赞表';

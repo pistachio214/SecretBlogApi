@@ -36,4 +36,10 @@ class PostController
         return R::success($this->postService->postReplyMessage($id, $parentId));
     }
 
+    public function like(Request $request): Response
+    {
+        $this->postService->postLike($request->input('post_id'));
+        return R::success();
+    }
+
 }

@@ -35,5 +35,7 @@ Route::group('/api', function () {
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
         Route::post('/reply', [PostController::class, 'createReplyMessage']);
         Route::get('/reply/{id:\d+}', [PostController::class, 'replyMessage']);
+
+        Route::put('/like', [PostController::class, 'like']);
     });
 })->middleware([RequestApiAuthCheckMiddleware::class]);

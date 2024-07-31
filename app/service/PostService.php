@@ -48,5 +48,13 @@ interface PostService
      */
     public function postReplyMessage(string $postId, string $parentId): LengthAwarePaginator;
 
+    /**
+     * 帖子点赞
+     * @param string $postId
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-07-31 10:53:22
+     */
+    public function postLike(string $postId): void;
 
 }

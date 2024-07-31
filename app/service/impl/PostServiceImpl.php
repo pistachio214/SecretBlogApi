@@ -4,6 +4,7 @@ namespace app\service\impl;
 
 use app\exception\ApiBusinessException;
 use app\model\PostFilesModel;
+use app\model\PostLikeModel;
 use app\model\PostModel;
 use app\model\PostReplyMessageModel;
 use app\service\PostService;
@@ -13,7 +14,6 @@ use DI\Attribute\Inject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use support\Db;
-use support\Log;
 use support\Request;
 use Throwable;
 use Webman\Context;
@@ -25,6 +25,9 @@ class PostServiceImpl implements PostService
 
     #[Inject]
     protected PostFilesModel $postFilesModel;
+
+    #[Inject]
+    protected PostLikeModel $postLikeModel;
 
     #[Inject]
     protected PostReplyMessageModel $postReplyMessageModel;
@@ -77,7 +80,7 @@ class PostServiceImpl implements PostService
 
     public function postDetail(string $id): ?Model
     {
-        return $this->postModel->newQuery()
+        $data = $this->postModel->newQuery()
             ->where('id', $id)
             ->with([
                 'users' => function ($query) {
@@ -93,6 +96,16 @@ class PostServiceImpl implements PostService
                 }
             ])
             ->first();
+
+        $userContext = Context::get('user');
+        $isLike = $this->postLikeModel->newQuery()->where([
+            'user_id' => $userContext->id,
+            'post_id' => $id
+        ])->exists();
+
+        $data->is_like = $isLike;
+
+        return $data;
     }
 
     /**
@@ -101,8 +114,6 @@ class PostServiceImpl implements PostService
     public function createPostReplyMessage(Request $request): void
     {
         $data = $request->only(['post_id', 'parent_id', 'receive_id', 'content', 'image']);
-
-        Log::info(json_encode($data));
 
         $postExists = $this->postModel->newQuery()->where(['id' => $data['post_id']])->exists();
         throw_unless($postExists, ApiBusinessException::class, '秘贴不存在,请刷新重新进入', null);
@@ -141,6 +152,29 @@ class PostServiceImpl implements PostService
             ->orderByDesc('like_number')
             ->orderByDesc('created_at')
             ->paginate(15);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function postLike(string $postId): void
+    {
+        $userContext = Context::get('user');
+
+        $exists = $this->postLikeModel->newQuery()
+            ->where([
+                'user_id' => $userContext->id,
+                'post_id' => $postId
+            ])
+            ->exists();
+
+        throw_if($exists, ApiBusinessException::class, '您已点赞,请勿重复点赞', null);
+
+        $postLikeModel = $this->postLikeModel->newInstance();
+        $postLikeModel->user_id = $userContext->id;
+        $postLikeModel->post_id = $postId;
+
+        $postLikeModel->save();
     }
 
 

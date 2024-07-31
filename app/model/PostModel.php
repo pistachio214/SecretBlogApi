@@ -40,5 +40,4 @@ class PostModel extends BaseModel
     {
         return $this->hasMany(PostFilesModel::class, 'post_id', 'id');
     }
-
 }
