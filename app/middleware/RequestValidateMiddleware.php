@@ -19,9 +19,9 @@ class RequestValidateMiddleware implements MiddlewareInterface
         $controller = $request->controller;
         $action = $request->action;
 
-        if ($controller != '' && $action != '') {
+        if (!empty($controller) && !empty($action)) {
             $validateClassName = $this->buildValidateName($controller, $action);
-            if ($validateClassName != '' && class_exists($validateClassName)) {
+            if ($validateClassName != null && class_exists($validateClassName)) {
                 // 获取类的反射对象  
                 $reflectionClass = new ReflectionClass($validateClassName);
 
@@ -33,21 +33,21 @@ class RequestValidateMiddleware implements MiddlewareInterface
         return $handler($request);
     }
 
-    private function buildValidateName(string $controller, string $action): string
+    private function buildValidateName(string $controller, string $action): string|null
     {
         $position = strpos($controller, "controller");
-        if ($position !== false) {
-            $validatePath = substr($controller, 0, $position) . "validate\\";
-        } else {
-            return "";
+        if ($position === false) {
+            return null;
         }
 
+        $validatePath = substr($controller, 0, $position) . "validate\\";
         $controllerSuffix = config('app.controller_suffix');
         $controllerExplode = explode("\\", $controller);
         $controllerName = last($controllerExplode);
         if (!str_contains($controllerName, $controllerSuffix)) {
-            return "";
+            return null;
         }
+
         $controllerName = str_replace($controllerSuffix, '', $controllerName);
 
         $validateValidateFolder = config('app.validate_folder');
