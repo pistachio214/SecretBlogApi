@@ -13,7 +13,7 @@ class PostCreatePostReplyMessageValidate extends Validate
         'post_id' => 'require',
         'parent_id' => 'require',
         'receive_id' => 'require',
-        'content' => 'require|200'
+        'content' => 'require|max:200'
     ];
 
     protected $message = [
