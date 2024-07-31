@@ -28,18 +28,25 @@ interface PostService
      */
     public function postDetail(string $id): ?Model;
 
-    //TODO 回帖信息
+    /**
+     * 回帖信息
+     * @param Request $request
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-07-30 23:33:21
+     */
     public function createPostReplyMessage(Request $request): void;
 
     /**
      * 回帖信息列表
-     * @param string $id
+     * @param string $postId
+     * @param string $parentId
      * @return LengthAwarePaginator
      *
      * @author: Aspen Soung <songyang410@outlook.com>
      * @date  : 2024-07-29 14:08:56
      */
-    public function postReplyMessage(string $id): LengthAwarePaginator;
+    public function postReplyMessage(string $postId, string $parentId): LengthAwarePaginator;
 
 
 }

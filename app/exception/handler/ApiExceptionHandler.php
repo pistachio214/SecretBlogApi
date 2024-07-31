@@ -31,7 +31,7 @@ class ApiExceptionHandler implements ExceptionHandlerInterface
             return R::error($exception->getMessage());
         }
 
-        return R::error('错误信息');
+        return R::error($exception->getMessage());
     }
 
 

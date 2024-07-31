@@ -32,7 +32,8 @@ class PostController
 
     public function replyMessage(Request $request, string $id): Response
     {
-        return R::success($this->postService->postReplyMessage($id));
+        $parentId = $request->get('parent_id', 0);
+        return R::success($this->postService->postReplyMessage($id, $parentId));
     }
 
 }

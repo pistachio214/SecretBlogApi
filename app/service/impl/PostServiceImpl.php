@@ -13,6 +13,7 @@ use DI\Attribute\Inject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use support\Db;
+use support\Log;
 use support\Request;
 use Throwable;
 use Webman\Context;
@@ -39,12 +40,14 @@ class PostServiceImpl implements PostService
         try {
             $data = $request->only(['title', 'content']);
 
-            $this->postModel->title = $data['title'];
-            $this->postModel->content = $data['content'];
-            $this->postModel->user_id = $userContext->id;
-            $this->postModel->type = 2;
+            $postModel = $this->postModel->newInstance();
 
-            $this->postModel->save();
+            $postModel->title = $data['title'];
+            $postModel->content = $data['content'];
+            $postModel->user_id = $userContext->id;
+            $postModel->type = 2;
+
+            $postModel->save();
 
             $images = $request->post('images');
             if (is_array($images) && count($images) > 0) {
@@ -52,7 +55,7 @@ class PostServiceImpl implements PostService
                 foreach ($images as $image) {
                     $postFile[] = [
                         'id' => SnowflakeUtil::getId(),
-                        'post_id' => $this->postModel->id,
+                        'post_id' => $postModel->id,
                         'url' => $image,
                         'type' => 1,
                         'created_at' => date('Y-m-d H:i:s', time()),
@@ -61,7 +64,7 @@ class PostServiceImpl implements PostService
                 }
 
                 if (count($postFile) > 0) {
-                    $this->postFilesModel->insert($postFile);
+                    $this->postFilesModel->newInstance()->insert($postFile);
                 }
             }
 
@@ -97,36 +100,44 @@ class PostServiceImpl implements PostService
      */
     public function createPostReplyMessage(Request $request): void
     {
-        $data = $request->only(['post_id', 'parent_id', 'content', 'image']);
+        $data = $request->only(['post_id', 'parent_id', 'receive_id', 'content', 'image']);
 
-        $postExists = $this->postModel->newQuery()->where(['id', $data['post_id']])->exists();
+        Log::info(json_encode($data));
+
+        $postExists = $this->postModel->newQuery()->where(['id' => $data['post_id']])->exists();
         throw_unless($postExists, ApiBusinessException::class, '秘贴不存在,请刷新重新进入', null);
 
         $userContext = Context::get('user');
 
-        $this->postReplyMessageModel->post_id = $data['post_id'];
-        $this->postReplyMessageModel->parent_id = $data['parent_id'] ?: 0;
-        $this->postReplyMessageModel->user_id = $userContext->id;
-        $this->postReplyMessageModel->content = $data['content'];
-        $this->postReplyMessageModel->image = $data['image'] ?: null;
+        $postReplyMessageModel = $this->postReplyMessageModel->newInstance();
 
-        $this->postReplyMessageModel->save();
+        $postReplyMessageModel->post_id = $data['post_id'];
+        $postReplyMessageModel->parent_id = $data['parent_id'] ?: 0;
+        $postReplyMessageModel->reply_id = $userContext->id;
+        $postReplyMessageModel->receive_id = $data['receive_id'] ?: null;
+        $postReplyMessageModel->content = $data['content'];
+        $postReplyMessageModel->image = $data['image'] ?? null;
+
+        $postReplyMessageModel->save();
     }
 
-
-    public function postReplyMessage(string $id): LengthAwarePaginator
+    public function postReplyMessage(string $postId, string $parentId): LengthAwarePaginator
     {
         return $this->postReplyMessageModel->newQuery()
             ->where([
-                'post_id' => $id,
-                'parent_id' => 0,
+                'post_id' => $postId,
+                'parent_id' => $parentId,
+                'status' => 1,
             ])
             ->with([
-                'user' => function ($query) {
+                'replyUser' => function ($query) {
+                    $query->select('id', 'nickname', 'avatar');
+                },
+                'receiveUser' => function ($query) {
                     $query->select('id', 'nickname', 'avatar');
                 },
             ])
-            ->select('id', 'user_id', 'content', 'image', 'like_number', 'reply_number', 'created_at')
+            ->select('id', 'parent_id', 'reply_id', 'receive_id', 'content', 'image', 'like_number', 'reply_number', 'created_at')
             ->orderByDesc('like_number')
             ->orderByDesc('created_at')
             ->paginate(15);

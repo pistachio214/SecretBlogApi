@@ -13,10 +13,15 @@ class PostReplyMessageModel extends BaseModel
      * @var string
      */
     protected $table = 'post_reply_message';
-    
-    public function user(): HasOne
+
+    public function replyUser(): HasOne
     {
-        return $this->hasOne(SysUserModel::class, 'id', 'user_id');
+        return $this->hasOne(SysUserModel::class, 'id', 'reply_id');
+    }
+
+    public function receiveUser(): HasOne
+    {
+        return $this->hasOne(SysUserModel::class, 'id', 'receive_id');
     }
 
 }
