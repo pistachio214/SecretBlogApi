@@ -20,11 +20,18 @@ use app\service\impl\AppMainServiceImpl;
 use app\service\PostService;
 use app\service\impl\PostServiceImpl;
 
+use app\service\UserService;
+use app\service\impl\UserServiceImpl;
+
+
 return [
     AppMainService::class => function (ContainerInterface $container) {
         return $container->get(AppMainServiceImpl::class);
     },
     PostService::class => function (ContainerInterface $container) {
         return $container->get(PostServiceImpl::class);
+    },
+    UserService::class => function (ContainerInterface $container) {
+        return $container->get(UserServiceImpl::class);
     },
 ];

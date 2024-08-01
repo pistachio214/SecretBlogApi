@@ -9,14 +9,23 @@ interface AppMainService
 {
     /**
      * 首页推荐 - 轮播列表
+     *
      * @return Collection
      *
      * @author: Aspen Soung <songyang410@outlook.com>
      * @date  : 2024-07-26 15:01:58
      */
-    public function mainDynamicBannerList(): Collection;
+    public function mainDynamicRecommendBannerList(): Collection;
 
 
-    //TODO 首页推荐 - 帖子列表
-    public function mainDynamicPostList(string $title = null): LengthAwarePaginator;
+    /**
+     * 首页推荐 - 帖子列表
+     *
+     * @param string|null $title
+     * @return LengthAwarePaginator
+     */
+    public function mainDynamicRecommendPostList(string $title = null): LengthAwarePaginator;
+
+    // 首页关注 - 帖子列表
+    public function mainDynamicFollowPostList(string $title = null): LengthAwarePaginator;
 }

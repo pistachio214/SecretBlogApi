@@ -120,3 +120,18 @@ CREATE TABLE `post_like`
     FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子点赞表';
+
+DROP TABLE IF EXISTS `sys_user_follow`;
+CREATE TABLE `sys_user_follow`
+(
+    `id`             bigint(20) NOT NULL COMMENT '编号',
+    `user_id`        bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+    `follow_user_id` bigint(20) NOT NULL COMMENT '被关注用户 表(sys_user)外键',
+
+    `created_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`     timestamp          DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
+    FOREIGN KEY (`follow_user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='关注用户表';
