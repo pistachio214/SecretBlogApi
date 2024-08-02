@@ -3,11 +3,12 @@
 namespace app\service\impl;
 
 use app\model\AppBannerModel;
+use app\model\HashtagsModel;
+use app\model\PostHashtagsModel;
 use app\model\PostModel;
 use app\model\SysUserFollowModel;
 use app\service\AppMainService;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use DI\Attribute\Inject;
@@ -22,7 +23,13 @@ class AppMainServiceImpl implements AppMainService
     protected PostModel $postModel;
 
     #[Inject]
+    protected PostHashtagsModel $postHashtagsModel;
+
+    #[Inject]
     protected SysUserFollowModel $sysUserFollowModel;
+
+    #[Inject]
+    protected HashtagsModel $hashtagsModel;
 
     public function mainDynamicRecommendBannerList(): Collection
     {
@@ -32,12 +39,12 @@ class AppMainServiceImpl implements AppMainService
             ->get(['id', 'title', 'remarks', 'image', 'arguments', 'created_at']);
     }
 
-    public function mainDynamicRecommendPostList(string $title = null): LengthAwarePaginator
+    public function mainDynamicRecommendPostList(string $keyword = null): LengthAwarePaginator
     {
-        return $this->postList($title);
+        return $this->postList(['keyword' => $keyword]);
     }
 
-    public function mainDynamicFollowPostList(string $title = null): LengthAwarePaginator
+    public function mainDynamicFollowPostList(string $keyword = null): LengthAwarePaginator
     {
         $userContext = Context::get('user');
 
@@ -46,22 +53,34 @@ class AppMainServiceImpl implements AppMainService
             ->pluck("follow_user_id")
             ->toArray();
 
-        return $this->postList($title, $userIds);
+        return $this->postList(['keyword' => $keyword], $userIds);
     }
 
-    private function postList(string $title = null, array $userIds = []): LengthAwarePaginator
+    public function mainDynamicSelfiePostList(string $keyword = null): LengthAwarePaginator
     {
-        $sevenDaysAgo = Carbon::now(config('app.default_timezone'))->subDay(7);
+        $search = ['keyword' => $keyword, 'post_type' => 2];
 
+        return $this->postList($search);
+    }
+
+    private function postList(array $search = [], array $userIds = [], array $postIds = []): LengthAwarePaginator
+    {
         return $this->postModel->newQuery()
-            ->when(!empty($title), function ($query) use ($title) {
-                return $query->where('title', 'like', "%$title%");
+            ->when(isset($search['keyword']) && !empty($search['keyword']), function ($query) use ($search) {
+                $keyword = $search['keyword'];
+                return $query->where('content', 'like', "%$keyword%");
+            })
+            ->when(isset($search['post_type']) && !empty($search['post_type']), function ($query) use ($search) {
+                $postType = $search['post_type'];
+                return $query->where(['post_type' => $postType]);
             })
             ->when(count($userIds) > 0, function ($query) use ($userIds) {
                 return $query->whereIn('user_id', $userIds);
             })
+            ->when(count($postIds) > 0, function ($query) use ($postIds) {
+                return $query->whereIn('id', $postIds);
+            })
             ->where(['status' => 1])
-            ->where('created_at', '>=', $sevenDaysAgo)
             ->with([
                 'users' => function ($query) {
                     $query->select('id', 'nickname', 'avatar')
@@ -71,7 +90,7 @@ class AppMainServiceImpl implements AppMainService
                             }
                         ]);
                 },
-                'images' => function ($query) {
+                'files' => function ($query) {
                     $query->where('type', 1)->select('post_id', 'url')
                         ->orderBy('created_at');
                 },
@@ -84,6 +103,29 @@ class AppMainServiceImpl implements AppMainService
             ->orderByDesc('like_num')
             ->orderByDesc('created_at')
             ->paginate(15);
+    }
+
+    public function mainDiscoveryTopTagList(): Collection
+    {
+        return $this->hashtagsModel->newQuery()
+            ->get(['id', 'name', 'image', 'description', 'created_at']);
+    }
+
+    public function mainDiscoveryTagList(): Collection
+    {
+        return $this->hashtagsModel->newQuery()
+            ->where('description', '!=', '')
+            ->get(['id', 'name', 'image', 'description', 'created_at']);
+    }
+
+    public function mainDiscoveryPostListByTag(string $tagId, string $keyword = null): LengthAwarePaginator
+    {
+        $postIds = $this->postHashtagsModel->newQuery()
+            ->where(['hashtags_id' => $tagId])
+            ->pluck("post_id")
+            ->toArray();
+
+        return $this->postList(['keyword' => $keyword], [], $postIds);
     }
 
 

@@ -37,7 +37,7 @@ class PostModel extends BaseModel
      * @author: Aspen Soung <songyang410@outlook.com>
      * @date  : 2024-07-26 20:02:31
      */
-    public function images(): HasMany
+    public function files(): HasMany
     {
         return $this->hasMany(PostFilesModel::class, 'post_id', 'id');
     }

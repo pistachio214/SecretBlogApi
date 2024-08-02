@@ -9,7 +9,15 @@ interface AppMainService
 {
     public function mainDynamicRecommendBannerList(): Collection;
 
-    public function mainDynamicRecommendPostList(string $title = null): LengthAwarePaginator;
+    public function mainDynamicRecommendPostList(string $keyword = null): LengthAwarePaginator;
 
-    public function mainDynamicFollowPostList(string $title = null): LengthAwarePaginator;
+    public function mainDynamicFollowPostList(string $keyword = null): LengthAwarePaginator;
+
+    public function mainDynamicSelfiePostList(string $keyword = null): LengthAwarePaginator;
+
+    public function mainDiscoveryTopTagList(): Collection;
+
+    public function mainDiscoveryTagList(): Collection;
+
+    public function mainDiscoveryPostListByTag(string $tagId, string $keyword = null): LengthAwarePaginator;
 }

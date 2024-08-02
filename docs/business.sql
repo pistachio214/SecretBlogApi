@@ -48,12 +48,14 @@ CREATE TABLE `app_banner`
 DROP TABLE IF EXISTS `hashtags`;
 CREATE TABLE `hashtags`
 (
-    `id`         bigint(20) NOT NULL COMMENT '编号',
-    `name`       varchar(200) NOT NULL COMMENT '话题名称',
+    `id`          bigint(20) NOT NULL COMMENT '编号',
+    `name`        varchar(200) NOT NULL COMMENT '话题名称',
+    `image`       varchar(255)          DEFAULT NULL COMMENT '话题图片',
+    `description` varchar(500)          DEFAULT NULL COMMENT '话题描述',
 
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted_at` timestamp          DEFAULT NULL,
+    `created_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`  timestamp             DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='话题表';
 
@@ -65,6 +67,7 @@ CREATE TABLE `post`
 
     `title`      varchar(100) NOT NULL COMMENT '标题',
     `type`       int(11) DEFAULT NULL COMMENT '发起人类型 1管理员 2用户',
+    `post_type`  int(11) DEFAULT '1' COMMENT '帖子类型 1-默认贴 2-自拍贴 3-视频贴',
     `content`    text COMMENT '内容',
     `images`     text COMMENT '图片集合',
     `hot_num`    int(11) DEFAULT '0' COMMENT '热度',

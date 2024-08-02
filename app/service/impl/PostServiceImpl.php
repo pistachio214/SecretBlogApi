@@ -45,18 +45,32 @@ class PostServiceImpl implements PostService
      */
     public function createPost(Request $request): void
     {
+        $this->createPostAction($request, ['post_type' => 1]);
+    }
+
+    public function createSelfiePost(Request $request): void
+    {
+        $this->createPostAction($request, ['post_type' => 2]);
+    }
+
+    private function createPostAction(Request $request, array $option = []): void
+    {
         $userContext = Context::get('user');
 
         Db::beginTransaction();
         try {
-            $data = $request->only(['title', 'content']);
+            $data = $request->only(['content']);
 
             $postModel = $this->postModel->newInstance();
 
-            $postModel->title = $data['title'];
             $postModel->content = $data['content'];
             $postModel->user_id = $userContext->id;
             $postModel->type = 2;
+            if (isset($option['post_type']) && !empty($option['post_type'])) {
+                $postModel->post_type = $option['post_type'];
+            } else {
+                $postModel->post_type = 1;
+            }
 
             $postModel->save();
 
@@ -79,7 +93,7 @@ class PostServiceImpl implements PostService
                 }
 
                 if (count($postFiles) > 0) {
-                    $this->postFilesModel::createModelInstance()->insert($postFiles);
+                    $this->postFilesModel->newInstance()->insert($postFiles);
                 }
             }
 
@@ -121,7 +135,7 @@ class PostServiceImpl implements PostService
                             }
                         ]);
                 },
-                'images' => function ($query) {
+                'files' => function ($query) {
                     $query->select('post_id', 'url', 'type');
                 }
             ])

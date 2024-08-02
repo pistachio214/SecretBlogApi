@@ -28,6 +28,20 @@ class PostController
     }
 
     /**
+     * 发自拍贴
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-02 11:51:53
+     */
+    public function createSelfie(Request $request): Response
+    {
+        $this->postService->createSelfiePost($request);
+        return R::success();
+    }
+
+    /**
      * 帖子基本详情
      * @param Request $request
      * @param string $id

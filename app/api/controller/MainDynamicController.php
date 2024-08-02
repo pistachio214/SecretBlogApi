@@ -6,11 +6,12 @@ use app\service\AppMainService;
 use app\utils\R;
 use DI\Attribute\Inject;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use support\Request;
 use support\Response;
 
+/**
+ * 首页控制器
+ */
 class MainDynamicController
 {
     #[Inject]
@@ -38,7 +39,7 @@ class MainDynamicController
      */
     public function postList(Request $request): Response
     {
-        return R::success($this->appMainService->mainDynamicRecommendPostList($request->get('title')));
+        return R::success($this->appMainService->mainDynamicRecommendPostList($request->get('keyword')));
     }
 
     /**
@@ -51,7 +52,20 @@ class MainDynamicController
      */
     public function postFollowList(Request $request): Response
     {
-        return R::success($this->appMainService->mainDynamicFollowPostList($request->get('title')));
+        return R::success($this->appMainService->mainDynamicFollowPostList($request->get('keyword')));
+    }
+
+    /**
+     * 首页自拍 - 数据列表
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-02 11:43:13
+     */
+    public function selfieList(Request $request): Response
+    {
+        return R::success($this->appMainService->mainDynamicSelfiePostList($request->get('keyword')));
     }
 
 

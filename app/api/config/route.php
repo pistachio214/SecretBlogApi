@@ -9,11 +9,16 @@ use app\api\controller\TestController;
 use app\api\controller\PostController;
 use app\api\controller\UserController;
 use app\api\controller\MainDynamicController;
+use app\api\controller\MainDiscoveryController;
 
 
 Route::get('/api/test', [TestController::class, 'test']);
 
 Route::group('/api', function () {
+
+    /**
+     * 星球 - 首页
+     */
     Route::group('/main-dynamic', function () {
 
         /**
@@ -31,10 +36,38 @@ Route::group('/api', function () {
             Route::get("/post", [MainDynamicController::class, 'postList']);
         });
 
+        /**
+         * 自拍
+         */
+        Route::group('/selfie', function () {
+            Route::get("/post", [MainDynamicController::class, 'selfieList']);
+        });
+
+        // TODO 视频
+        Route::group('/video', function () {
+        });
+    });
+
+    /**
+     * 热度
+     */
+    Route::group('/main-discovery', function () {
+
+        /**
+         * 话题模块
+         */
+        Route::group('/topic', function () {
+            Route::get("/hot-top-tags", [MainDiscoveryController::class, 'tagTopList']);
+            Route::get("/hot-tags", [MainDiscoveryController::class, 'tagList']);
+
+            Route::get("/post/{id:\d+}", [MainDiscoveryController::class, 'postList']);
+        });
     });
 
     Route::group('/post', function () {
         Route::post('', [PostController::class, 'create']);
+        Route::post('/selfie', [PostController::class, 'createSelfie']);
+
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
         Route::post('/reply', [PostController::class, 'createReplyMessage']);
         Route::get('/reply/{id:\d+}', [PostController::class, 'replyMessage']);

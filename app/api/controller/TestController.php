@@ -7,6 +7,7 @@ use app\model\PostReplyMessageModel;
 use app\model\SysUserExtendModel;
 use app\model\SysUserFilesModel;
 use app\utils\R;
+use Carbon\Carbon;
 use support\Request;
 use support\Response;
 use Webman\Context;
@@ -17,8 +18,9 @@ class TestController
     public function test(Request $request): Response
     {
 //        $userId = '1689541974618537989';
+        $sevenDaysAgo = Carbon::now(config('app.default_timezone'))->subDay(7);
 
-        return R::success($request->all());
+        return R::success($sevenDaysAgo);
     }
 
     private function createPostReplyMessage(): void

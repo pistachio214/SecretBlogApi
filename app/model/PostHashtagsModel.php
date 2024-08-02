@@ -2,6 +2,7 @@
 
 namespace app\model;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PostHashtagsModel extends BaseModel
 {
