@@ -74,6 +74,9 @@ class AppMainServiceImpl implements AppMainService
                 'images' => function ($query) {
                     $query->where('type', 1)->select('post_id', 'url')
                         ->orderBy('created_at');
+                },
+                'tags' => function ($query) {
+                    $query->select('name');
                 }
             ])
             ->orderByDesc('hot_num')

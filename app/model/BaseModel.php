@@ -29,11 +29,11 @@ class BaseModel extends Model
      */
     protected $hidden = ['updated_at', 'deleted_at'];
 
-//    public static function createModelInstance(): static
-//    {
-//        // 注意这里使用了 late static binding
-//        return new static();
-//    }
+    public static function createModelInstance(): static
+    {
+        // 注意这里使用了 late static binding
+        return new static();
+    }
 
     protected static function boot()
     {

@@ -3,7 +3,9 @@
 namespace app\service\impl;
 
 use app\exception\ApiBusinessException;
+use app\model\HashtagsModel;
 use app\model\PostFilesModel;
+use app\model\PostHashtagsModel;
 use app\model\PostLikeModel;
 use app\model\PostModel;
 use app\model\PostReplyMessageModel;
@@ -21,6 +23,9 @@ use Webman\Context;
 class PostServiceImpl implements PostService
 {
     #[Inject]
+    protected HashtagsModel $hashtagsModel;
+
+    #[Inject]
     protected PostModel $postModel;
 
     #[Inject]
@@ -28,6 +33,9 @@ class PostServiceImpl implements PostService
 
     #[Inject]
     protected PostLikeModel $postLikeModel;
+
+    #[Inject]
+    protected PostHashtagsModel $postHashtagsModel;
 
     #[Inject]
     protected PostReplyMessageModel $postReplyMessageModel;
@@ -52,24 +60,46 @@ class PostServiceImpl implements PostService
 
             $postModel->save();
 
-            $images = $request->post('images');
+            $date = date('Y-m-d H:i:s', time());
+            $commonDate = [
+                'created_at' => $date,
+                'updated_at' => $date,
+            ];
+
+            $images = $request->post('images', []);
             if (is_array($images) && count($images) > 0) {
-                $postFile = [];
+                $postFiles = [];
                 foreach ($images as $image) {
-                    $postFile[] = [
+                    $postFiles[] = array_merge([
                         'id' => SnowflakeUtil::getId(),
                         'post_id' => $postModel->id,
                         'url' => $image,
                         'type' => 1,
-                        'created_at' => date('Y-m-d H:i:s', time()),
-                        'updated_at' => date('Y-m-d H:i:s', time()),
-                    ];
+                    ], $commonDate);
                 }
 
-                if (count($postFile) > 0) {
-                    $this->postFilesModel->newInstance()->insert($postFile);
+                if (count($postFiles) > 0) {
+                    $this->postFilesModel::createModelInstance()->insert($postFiles);
                 }
             }
+
+            $tags = $request->post('hashtags', []);
+            if (is_array($tags) && count($tags) > 0) {
+                $postTags = [];
+                foreach ($tags as $tag) {
+                    $hashtagsModel = $this->hashtagsModel->newQuery()->firstOrCreate(['name' => $tag]);
+                    $postTags[] = array_merge([
+                        'id' => SnowflakeUtil::getId(),
+                        'post_id' => $postModel->id,
+                        'hashtags_id' => $hashtagsModel->id,
+                    ], $commonDate);
+                }
+
+                if (count($postTags) > 0) {
+                    $this->postHashtagsModel->newInstance()->insert($postTags);
+                }
+            }
+
 
             Db::commit();
         } catch (Throwable $exception) {

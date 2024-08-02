@@ -45,6 +45,18 @@ CREATE TABLE `app_banner`
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='app轮播表';
 
+DROP TABLE IF EXISTS `hashtags`;
+CREATE TABLE `hashtags`
+(
+    `id`         bigint(20) NOT NULL COMMENT '编号',
+    `name`       varchar(200) NOT NULL COMMENT '话题名称',
+
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp          DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='话题表';
+
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE `post`
 (
@@ -81,6 +93,21 @@ CREATE TABLE `post_files`
     PRIMARY KEY (`id`) USING BTREE,
     FOREIGN KEY (`post_id`) REFERENCES `post` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子附件表';
+
+DROP TABLE IF EXISTS `post_hashtags`;
+CREATE TABLE `post_hashtags`
+(
+    `id`          bigint(20) NOT NULL COMMENT '编号',
+    `post_id`     bigint(20) NOT NULL COMMENT '帖子表(post)外键',
+    `hashtags_id` bigint(20) NOT NULL COMMENT '话题表(hashtags)外键',
+
+    `created_at`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`  timestamp          DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
+    FOREIGN KEY (`hashtags_id`) REFERENCES `hashtags` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子话题表';
 
 DROP TABLE IF EXISTS `post_reply_message`;
 CREATE TABLE `post_reply_message`

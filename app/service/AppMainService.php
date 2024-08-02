@@ -26,6 +26,13 @@ interface AppMainService
      */
     public function mainDynamicRecommendPostList(string $title = null): LengthAwarePaginator;
 
-    // 首页关注 - 帖子列表
+    /**
+     * 首页关注 - 帖子列表
+     * @param string|null $title
+     * @return LengthAwarePaginator
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-02 10:56:47
+     */
     public function mainDynamicFollowPostList(string $title = null): LengthAwarePaginator;
 }
