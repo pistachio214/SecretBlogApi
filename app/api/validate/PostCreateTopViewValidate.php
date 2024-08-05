@@ -7,17 +7,16 @@ use support\Request;
 use think\Validate;
 use Throwable;
 
-class PostCreateSelfieValidate extends Validate
+class PostCreateTopViewValidate extends Validate
 {
     protected $rule = [
-        'content' => 'require|max:300',
-        'images' => 'require|array'
+        'title' => 'require|max:25',
+        'images' => 'array'
     ];
 
     protected $message = [
-        'content.require' => '帖子内容是必填项',
-        'content.max' => '帖子内容最多不能超过300个字',
-        'images.require' => '图片为必传项',
+        'title.require' => '约伴标题不能为空',
+        'title.max' => '约伴标题最多不能超过25个字',
         'images.array' => '图片传递必须为数组格式'
     ];
 

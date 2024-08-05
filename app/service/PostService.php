@@ -12,6 +12,10 @@ interface PostService
 
     public function createSelfiePost(Request $request): void;
 
+    public function createAccompanyPost(Request $request): void;
+
+    public function createTopView(Request $request): void;
+
     public function postDetail(string $id): ?Model;
 
     public function createPostReplyMessage(Request $request): void;

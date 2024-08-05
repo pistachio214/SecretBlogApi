@@ -30,6 +30,21 @@ CREATE TABLE `sys_user_files`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='系统用户附件表';
 
+DROP TABLE IF EXISTS `sys_user_follow`;
+CREATE TABLE `sys_user_follow`
+(
+    `id`             bigint(20) NOT NULL COMMENT '编号',
+    `user_id`        bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+    `follow_user_id` bigint(20) NOT NULL COMMENT '被关注用户 表(sys_user)外键',
+
+    `created_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`     timestamp          DEFAULT NULL,
+    PRIMARY KEY (`id`) USING BTREE,
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
+    FOREIGN KEY (`follow_user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='关注用户表';
+
 DROP TABLE IF EXISTS `app_banner`;
 CREATE TABLE `app_banner`
 (
@@ -65,9 +80,9 @@ CREATE TABLE `post`
     `id`         bigint(20) NOT NULL COMMENT '编号',
     `user_id`    bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
 
-    `title`      varchar(100) NOT NULL COMMENT '标题',
+    `title`      varchar(100)       DEFAULT NULL COMMENT '标题',
     `type`       int(11) DEFAULT NULL COMMENT '发起人类型 1管理员 2用户',
-    `post_type`  int(11) DEFAULT '1' COMMENT '帖子类型 1-默认贴 2-自拍贴 3-视频贴',
+    `post_type`  int(11) DEFAULT '1' COMMENT '帖子类型 1-默认贴 2-自拍贴 3-视频贴 4-约伴贴',
     `content`    text COMMENT '内容',
     `images`     text COMMENT '图片集合',
     `hot_num`    int(11) DEFAULT '0' COMMENT '热度',
@@ -75,9 +90,9 @@ CREATE TABLE `post`
     `like_num`   int(11) DEFAULT '0' COMMENT '喜欢数',
     `review_num` int(11) DEFAULT '0' COMMENT '评论数',
 
-    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted_at` timestamp             DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp          DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE,
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子表';
@@ -151,17 +166,18 @@ CREATE TABLE `post_like`
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='帖子点赞表';
 
-DROP TABLE IF EXISTS `sys_user_follow`;
-CREATE TABLE `sys_user_follow`
+DROP TABLE IF EXISTS `post_accompany_partner`;
+CREATE TABLE `post_accompany_partner`
 (
-    `id`             bigint(20) NOT NULL COMMENT '编号',
-    `user_id`        bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
-    `follow_user_id` bigint(20) NOT NULL COMMENT '被关注用户 表(sys_user)外键',
+    `id`         bigint(20) NOT NULL COMMENT '编号',
+    `post_id`    bigint(20) NOT NULL COMMENT '帖子表(post)外键',
+    `user_id`    bigint(20) NOT NULL COMMENT '用户表(sys_user)外键',
+    `organizer`  int(11) DEFAULT 0 COMMENT '组织者 1-组织者 0-参与者',
 
-    `created_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`     timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted_at`     timestamp          DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at` timestamp          DEFAULT NULL,
     PRIMARY KEY (`id`) USING BTREE,
-    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`),
-    FOREIGN KEY (`follow_user_id`) REFERENCES `sys_user` (`id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='关注用户表';
+    FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='约伴贴的参加人员表';

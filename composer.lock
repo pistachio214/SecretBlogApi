@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "816af4f0f0f1ba49896ba9d51a95c46c",
+    "content-hash": "7bc0714cb8bce6a85db5e5df38fea9e2",
     "packages": [
         {
             "name": "brick/math",
@@ -3817,6 +3817,43 @@
                 "wiki": "http://www.workerman.net/doc/webman"
             },
             "time": "2024-01-23T03:25:23+00:00"
+        },
+        {
+            "name": "webman/event",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webman-php/event.git",
+                "reference": "f4478941c3b7efa4d7e9c063f2f6efd7ee3071a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webman-php/event/zipball/f4478941c3b7efa4d7e9c063f2f6efd7ee3071a7",
+                "reference": "f4478941c3b7efa4d7e9c063f2f6efd7ee3071a7",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\Event\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Webman event plugin",
+            "support": {
+                "issues": "https://github.com/webman-php/event/issues",
+                "source": "https://github.com/webman-php/event/tree/v1.0.4"
+            },
+            "time": "2023-03-28T04:01:23+00:00"
         },
         {
             "name": "webman/gateway-worker",

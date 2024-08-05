@@ -20,4 +20,10 @@ interface AppMainService
     public function mainDiscoveryTagList(): Collection;
 
     public function mainDiscoveryPostListByTag(string $tagId, string $keyword = null): LengthAwarePaginator;
+
+    public function mainDiscoveryPostListByAccompany(string $keyword = null): LengthAwarePaginator;
+
+    public function mainDiscoveryJoinAccompany(string $id): void;
+
+    public function mainDiscoveryUserListByAccompany(string $id): Collection;
 }

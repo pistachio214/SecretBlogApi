@@ -2,16 +2,20 @@
 
 namespace app\service\impl;
 
+use app\exception\ApiBusinessException;
 use app\model\AppBannerModel;
 use app\model\HashtagsModel;
+use app\model\PostAccompanyPartnerModel;
 use app\model\PostHashtagsModel;
 use app\model\PostModel;
 use app\model\SysUserFollowModel;
+use app\model\SysUserModel;
 use app\service\AppMainService;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use DI\Attribute\Inject;
+use Throwable;
 use Webman\Context;
 
 class AppMainServiceImpl implements AppMainService
@@ -20,10 +24,16 @@ class AppMainServiceImpl implements AppMainService
     protected AppBannerModel $appBannerModel;
 
     #[Inject]
+    protected SysUserModel $sysUserModel;
+
+    #[Inject]
     protected PostModel $postModel;
 
     #[Inject]
     protected PostHashtagsModel $postHashtagsModel;
+
+    #[Inject]
+    protected PostAccompanyPartnerModel $postAccompanyPartnerModel;
 
     #[Inject]
     protected SysUserFollowModel $sysUserFollowModel;
@@ -128,5 +138,48 @@ class AppMainServiceImpl implements AppMainService
         return $this->postList(['keyword' => $keyword], [], $postIds);
     }
 
+    public function mainDiscoveryPostListByAccompany(string $keyword = null): LengthAwarePaginator
+    {
+        $search = ['keyword' => $keyword, 'post_type' => 4];
+
+        return $this->postList($search);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function mainDiscoveryJoinAccompany(string $id): void
+    {
+        $userContext = Context::get('user');
+
+        $exists = $this->postAccompanyPartnerModel->newQuery()
+            ->where([
+                'user_id' => $userContext->id,
+                'post_id' => $id
+            ])
+            ->exists();
+
+        throw_if($exists, ApiBusinessException::class, '您已加入该约伴活动,请勿重复加入');
+
+        $postAccompanyPartnerModel = $this->postAccompanyPartnerModel->newInstance();
+
+        $postAccompanyPartnerModel->user_id = $userContext->id;
+        $postAccompanyPartnerModel->post_id = $id;
+
+        $postAccompanyPartnerModel->save();
+    }
+
+    public function mainDiscoveryUserListByAccompany(string $id): Collection
+    {
+        return $this->postAccompanyPartnerModel->newQuery()
+            ->where('post_id', $id)
+            ->with([
+                'users' => function ($query) {
+                    $query->select(['id', 'nickname', 'avatar']);
+                }
+            ])
+            ->select(['id', 'user_id', 'organizer'])
+            ->get();
+    }
 
 }

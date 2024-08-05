@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\service\PostService;
 use app\utils\R;
 use DI\Attribute\Inject;
+use support\Log;
 use support\Request;
 use support\Response;
 
@@ -42,6 +43,26 @@ class PostController
     }
 
     /**
+     * 发约伴贴
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-05 14:32:05
+     */
+    public function createAccompany(Request $request): Response
+    {
+        $this->postService->createAccompanyPost($request);
+        return R::success();
+    }
+
+    public function createTopView(Request $request): Response
+    {
+        $this->postService->createTopView($request);
+        return R::success();
+    }
+
+    /**
      * 帖子基本详情
      * @param Request $request
      * @param string $id
@@ -50,7 +71,7 @@ class PostController
      * @author: Aspen Soung <songyang410@outlook.com>
      * @date  : 2024-07-29 13:36:19
      */
-    public function detail(Request $request, string $id): Response
+    public function detail(string $id): Response
     {
         return R::success($this->postService->postDetail($id));
     }

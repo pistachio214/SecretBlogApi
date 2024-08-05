@@ -16,9 +16,11 @@ use DI\Attribute\Inject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use support\Db;
+use support\Log;
 use support\Request;
 use Throwable;
 use Webman\Context;
+use Webman\Event\Event;
 
 class PostServiceImpl implements PostService
 {
@@ -53,17 +55,34 @@ class PostServiceImpl implements PostService
         $this->createPostAction($request, ['post_type' => 2]);
     }
 
+    public function createAccompanyPost(Request $request): void
+    {
+        $this->createPostAction($request, ['post_type' => 4]);
+    }
+
+    public function createTopView(Request $request): void
+    {
+        $this->createPostAction($request, ['post_type' => 5]);
+    }
+
     private function createPostAction(Request $request, array $option = []): void
     {
         $userContext = Context::get('user');
 
         Db::beginTransaction();
         try {
-            $data = $request->only(['content']);
+            $data = $request->only(['title', 'content']);
 
             $postModel = $this->postModel->newInstance();
 
-            $postModel->content = $data['content'];
+            if (isset($option['post_type']) && in_array($option['post_type'], [4, 5])) {
+                $postModel->title = $data['title'];
+            }
+
+            if (isset($data['content']) && !empty($data['content'])) {
+                $postModel->content = $data['content'];
+            }
+
             $postModel->user_id = $userContext->id;
             $postModel->type = 2;
             if (isset($option['post_type']) && !empty($option['post_type'])) {
@@ -114,6 +133,7 @@ class PostServiceImpl implements PostService
                 }
             }
 
+            Event::dispatch('post.create.follow.up.work.event', $postModel);
 
             Db::commit();
         } catch (Throwable $exception) {

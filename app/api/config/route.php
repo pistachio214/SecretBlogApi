@@ -60,13 +60,28 @@ Route::group('/api', function () {
             Route::get("/hot-top-tags", [MainDiscoveryController::class, 'tagTopList']);
             Route::get("/hot-tags", [MainDiscoveryController::class, 'tagList']);
 
-            Route::get("/post/{id:\d+}", [MainDiscoveryController::class, 'postList']);
+            Route::get("/post/{id:\d+}", [MainDiscoveryController::class, 'postListByTopic']);
+        });
+
+        // TODO 附近模块
+        Route::group("/nearby", function () {
+        });
+
+        /**
+         * 约伴模块
+         */
+        Route::group("/accompany", function () {
+            Route::get('/post', [MainDiscoveryController::class, 'postListByAccompany']);
+            Route::put('/join/{id:\d+}', [MainDiscoveryController::class, 'joinAccompany']);
+            Route::get('/users/{id:\d+}', [MainDiscoveryController::class, 'userListByAccompany']);
         });
     });
 
     Route::group('/post', function () {
         Route::post('', [PostController::class, 'create']);
         Route::post('/selfie', [PostController::class, 'createSelfie']);
+        Route::post('/accompany', [PostController::class, 'createAccompany']);
+        Route::post('/top-view', [PostController::class, 'createTopView']);
 
         Route::get('/{id:\d+}', [PostController::class, 'detail']);
         Route::post('/reply', [PostController::class, 'createReplyMessage']);
