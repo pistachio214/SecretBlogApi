@@ -56,6 +56,14 @@ class PostController
         return R::success();
     }
 
+    /**
+     * 发看法贴
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-06 10:07:00
+     */
     public function createTopView(Request $request): Response
     {
         $this->postService->createTopView($request);

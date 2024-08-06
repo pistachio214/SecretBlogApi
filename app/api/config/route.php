@@ -75,6 +75,13 @@ Route::group('/api', function () {
             Route::put('/join/{id:\d+}', [MainDiscoveryController::class, 'joinAccompany']);
             Route::get('/users/{id:\d+}', [MainDiscoveryController::class, 'userListByAccompany']);
         });
+
+        /**
+         * 看法模块
+         */
+        Route::group("/top-view", function () {
+            Route::get("/post", [MainDiscoveryController::class, 'postListByTopView']);
+        });
     });
 
     Route::group('/post', function () {

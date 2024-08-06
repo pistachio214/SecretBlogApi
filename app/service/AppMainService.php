@@ -26,4 +26,6 @@ interface AppMainService
     public function mainDiscoveryJoinAccompany(string $id): void;
 
     public function mainDiscoveryUserListByAccompany(string $id): Collection;
+
+    public function mainDiscoveryPostListByTopView(string $keyword = null): LengthAwarePaginator;
 }

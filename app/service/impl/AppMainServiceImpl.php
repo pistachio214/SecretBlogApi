@@ -182,4 +182,12 @@ class AppMainServiceImpl implements AppMainService
             ->get();
     }
 
+    public function mainDiscoveryPostListByTopView(string $keyword = null): LengthAwarePaginator
+    {
+        $search = ['keyword' => $keyword, 'post_type' => 5];
+
+        return $this->postList($search);
+    }
+
+
 }

@@ -81,9 +81,30 @@ class MainDiscoveryController
         return R::success();
     }
 
-    // TODO 约伴活动下的已加入人员列表
+    /**
+     * 约伴活动下的已加入人员列表
+     * @param string $id
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-06 10:09:03
+     */
     public function userListByAccompany(string $id): Response
     {
         return R::success($this->appMainService->mainDiscoveryUserListByAccompany($id));
+    }
+
+    /**
+     * 看法界面的帖子列表
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-06 10:35:24
+     */
+    public function postListByTopView(Request $request): Response
+    {
+        $keyword = $request->get('keyword');
+        return R::success($this->appMainService->mainDiscoveryPostListByTopView($keyword));
     }
 }
