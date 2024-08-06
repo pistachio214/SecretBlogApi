@@ -2,6 +2,7 @@
 
 namespace app\model;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PostFilesModel extends BaseModel
 {
@@ -12,5 +13,4 @@ class PostFilesModel extends BaseModel
      * @var string
      */
     protected $table = 'post_files';
-
 }

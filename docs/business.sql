@@ -181,3 +181,6 @@ CREATE TABLE `post_accompany_partner`
     FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT ='约伴贴的参加人员表';
+
+ALTER TABLE `sys_user_extend`
+    ADD `hobby` json COMMENT '兴趣爱好' AFTER `bg_image`;

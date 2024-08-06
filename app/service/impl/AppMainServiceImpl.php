@@ -9,7 +9,6 @@ use app\model\PostAccompanyPartnerModel;
 use app\model\PostHashtagsModel;
 use app\model\PostModel;
 use app\model\SysUserFollowModel;
-use app\model\SysUserModel;
 use app\service\AppMainService;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -22,9 +21,6 @@ class AppMainServiceImpl implements AppMainService
 {
     #[Inject]
     protected AppBannerModel $appBannerModel;
-
-    #[Inject]
-    protected SysUserModel $sysUserModel;
 
     #[Inject]
     protected PostModel $postModel;

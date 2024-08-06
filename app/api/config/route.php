@@ -12,7 +12,7 @@ use app\api\controller\MainDynamicController;
 use app\api\controller\MainDiscoveryController;
 
 
-Route::get('/api/test', [TestController::class, 'test']);
+Route::get('/api/test', [TestController::class, 'test'])->middleware([RequestApiAuthCheckMiddleware::class]);
 
 Route::group('/api', function () {
 
@@ -82,6 +82,25 @@ Route::group('/api', function () {
         Route::group("/top-view", function () {
             Route::get("/post", [MainDiscoveryController::class, 'postListByTopView']);
         });
+    });
+
+    //TODO 对话
+    Route::group("/message", function () {
+    });
+
+    /**
+     * 用户
+     */
+    Route::group("/user", function () {
+        Route::get("/mine", [UserController::class, 'mine']);
+        Route::get("/profile", [UserController::class, 'profile']);
+        Route::get("/dynamic", [UserController::class, 'dynamic']);
+
+        Route::get('/mine/{id:\d+}', [UserController::class, 'mineByUserId']);
+        Route::get('/profile/{id:\d+}', [UserController::class, 'profileByUserId']);
+        Route::get('/dynamic/{id:\d+}', [UserController::class, 'dynamicByUserId']);
+
+        Route::post("/edit", [UserController::class, 'edit']);
     });
 
     Route::group('/post', function () {
