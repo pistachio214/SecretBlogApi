@@ -8,7 +8,6 @@ use app\model\PostModel;
 use app\model\SysUserExtendModel;
 use app\model\SysUserFollowModel;
 use app\model\SysUserModel;
-use app\service\PostService;
 use app\service\UserService;
 use DI\Attribute\Inject;
 use Illuminate\Database\Eloquent\Model;
