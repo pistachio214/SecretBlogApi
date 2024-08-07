@@ -12,7 +12,7 @@ class Sql implements Bootstrap
     {
         Db::connection()->listen(function (QueryExecuted $queryExecuted) {
             if (isset($queryExecuted->sql) && $queryExecuted->sql != "select 1") {
-                dump("[{$queryExecuted->time}] ms {$queryExecuted->sql}");
+                dump(date('Y-m-d H:i:s') . " - [{$queryExecuted->time}] ms : {$queryExecuted->sql}");
             }
         });
     }
