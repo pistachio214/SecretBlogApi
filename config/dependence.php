@@ -14,6 +14,9 @@
 
 use Psr\Container\ContainerInterface;
 
+use app\service\AuthService;
+use app\service\impl\AuthServiceImpl;
+
 use app\service\AppMainService;
 use app\service\impl\AppMainServiceImpl;
 
@@ -25,6 +28,9 @@ use app\service\impl\UserServiceImpl;
 
 
 return [
+    AuthService::class => function (ContainerInterface $container) {
+        return $container->get(AuthServiceImpl::class);
+    },
     AppMainService::class => function (ContainerInterface $container) {
         return $container->get(AppMainServiceImpl::class);
     },

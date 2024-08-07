@@ -4,17 +4,20 @@ use Webman\Route;
 
 use app\middleware\RequestApiAuthCheckMiddleware;
 
-use app\api\controller\TestController;
-
+use app\api\controller\AuthController;
 use app\api\controller\PostController;
 use app\api\controller\UserController;
 use app\api\controller\MainDynamicController;
 use app\api\controller\MainDiscoveryController;
 
 
-Route::get('/api/test', [TestController::class, 'test'])->middleware([RequestApiAuthCheckMiddleware::class]);
+Route::post("/api/register", [UserController::class, 'register']);
+Route::post("/api/login", [AuthController::class, 'login']);
+Route::post("/api/refresh-token", [AuthController::class, 'refreshToken']);
 
 Route::group('/api', function () {
+
+    Route::delete("/logout", [AuthController::class, 'logout']);
 
     /**
      * 星球 - 首页

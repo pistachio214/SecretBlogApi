@@ -14,6 +14,20 @@ class UserController
     protected UserService $userService;
 
     /**
+     * app注册
+     * @param Request $request
+     * @return Response
+     *
+     * @author: Aspen Soung <songyang410@outlook.com>
+     * @date  : 2024-08-07 16:20:00
+     */
+    public function register(Request $request): Response
+    {
+        $this->userService->register($request);
+        return R::success();
+    }
+
+    /**
      * 获取用户本身信息
      * @return Response
      *

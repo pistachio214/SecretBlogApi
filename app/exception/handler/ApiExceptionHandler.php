@@ -28,10 +28,10 @@ class ApiExceptionHandler implements ExceptionHandlerInterface
     public function render(Request $request, Throwable $exception): Response
     {
         if ($exception instanceof ApiBusinessException) {
-            return R::error($exception->getMessage());
+            return R::error($exception->getMessage(), $exception->getCode());
         }
 
-        return R::error($exception->getMessage());
+        return R::error($exception->getMessage(), $exception->getCode());
     }
 
 

@@ -8,6 +8,8 @@ use support\Request;
 
 interface UserService
 {
+    public function register(Request $request): void;
+
     public function getMineInfo(): ?Model;
 
     public function getMineInfoByUserId(string $userId): ?Model;

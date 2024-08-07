@@ -34,6 +34,49 @@ class UserServiceImpl implements UserService
     #[Inject]
     protected PostFilesModel $postFilesModel;
 
+    /**
+     * @throws Throwable
+     */
+    public function register(Request $request): void
+    {
+        $sysUserData = $request->only(['nickname', 'username', 'avatar']);
+
+        $exists = $this->sysUserModel->newQuery()->where(['username' => $sysUserData['username']])->exists();
+        throw_if($exists, ApiBusinessException::class, '该账号已注册~');
+
+        Db::beginTransaction();
+        try {
+            $password = password_hash($request->input('password'), PASSWORD_BCRYPT, ['cost' => 12]);
+            $sysUserModel = $this->sysUserModel->newInstance();
+
+            $sysUserModel->nickname = $sysUserData['nickname'];
+            $sysUserModel->username = $sysUserData['username'];
+            $sysUserModel->avatar = $sysUserData['avatar'] ?? null;
+            $sysUserModel->password = $password;
+            $sysUserModel->type = 2;
+            $sysUserModel->status = 1;
+
+            $sysUserModel->save();
+
+            $sysUserExtendData = $request->only(['sex', 'signature']);
+            $hobby = json_encode($request->input('hobby', []));
+
+            $sysUserExtendModel = $this->sysUserExtendModel->newInstance();
+
+            $sysUserExtendModel->user_id = $sysUserModel->id;
+            $sysUserExtendModel->sex = $sysUserExtendData['sex'];
+            $sysUserExtendModel->signature = $sysUserExtendData['signature'];
+            $sysUserExtendModel->hobby = $hobby;
+
+            $sysUserExtendModel->save();
+
+            Db::commit();
+        } catch (Throwable $exception) {
+            Db::rollBack();
+            throw new ApiBusinessException("注册失败!请检查注册信息是否合法！", $exception->getMessage());
+        }
+    }
+
     public function getMineInfo(): ?Model
     {
         $userContext = Context::get("user");

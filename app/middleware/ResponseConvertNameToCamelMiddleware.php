@@ -17,10 +17,10 @@ class ResponseConvertNameToCamelMiddleware implements MiddlewareInterface
 
         $body = json_decode($response->rawBody());
 
-        // 转化下分页数据的格式
+        // 转化下特定数据的格式
         $body_data = $this->convertToLengthAwarePaginator($body->data);
 
-        if (isset($body_data) && !empty($body_data)) {
+        if (isset($body_data)) {
             $body->data = $this->convertToCamelCaseRecursive($body_data);
 
             $response->withBody(json_encode($body));

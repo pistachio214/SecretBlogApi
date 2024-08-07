@@ -24,7 +24,6 @@ class RequestValidateMiddleware implements MiddlewareInterface
             if ($validateClassName != null && class_exists($validateClassName)) {
                 // 获取类的反射对象  
                 $reflectionClass = new ReflectionClass($validateClassName);
-
                 // 如果类有构造函数且需要参数，则可能需要手动处理或使用newInstanceArgs()
                 $reflectionClass->newInstanceArgs([$request]);
             }

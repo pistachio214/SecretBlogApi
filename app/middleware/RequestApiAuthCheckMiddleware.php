@@ -2,9 +2,9 @@
 
 namespace app\middleware;
 
-use app\model\SysUserModel;
-use app\utils\R;
-use support\Cache;
+use app\exception\ApiBusinessException;
+use Tinywan\Jwt\Exception\JwtTokenException;
+use Tinywan\Jwt\JwtToken;
 use Webman\Context;
 use Webman\MiddlewareInterface;
 use Webman\Http\Response;
@@ -14,25 +14,22 @@ class RequestApiAuthCheckMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, callable $handler): Response
     {
-//        $token = $request->header('token');
-//
-//        if (empty($token)) {
-//            return R::error('您需要先进行登陆后再进行操作');
-//        }
-//
-//        if (!Cache::has($token)) {
-//            return R::error("您的登陆信息已失效,请重新登录!");
-//        }
-//
-//        $user = Cache::get($token);
-//        if (!$user) {
-//            return R::error("用户信息不存在,请重新登录!");
-//        }
+        try {
+            $token = JwtToken::verify();
 
-        $user = SysUserModel::find('1689541974618537987');
-        Context::set("user", $user);
+            $extend = $token['extend'];
+            $user = (object)[
+                'id' => $extend['id'],
+                'nickname' => $extend['nickname'],
+                'username' => $extend['username'],
+                'client' => $extend['client'],
+            ];
+            Context::set("user", $user);
 
-        return $handler($request);
+            return $handler($request);
+        } catch (JwtTokenException $jwtTokenException) {
+            throw new ApiBusinessException($jwtTokenException->getMessage(), null, $jwtTokenException->getCode());
+        }
     }
 
 }

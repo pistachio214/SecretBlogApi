@@ -40,9 +40,10 @@ class AppMainServiceImpl implements AppMainService
     public function mainDynamicRecommendBannerList(): Collection
     {
         return $this->appBannerModel->newQuery()
+            ->select(['id', 'title', 'remarks', 'image', 'arguments', 'created_at'])
             ->where(['type' => 1])
             ->orderByDesc('created_at')
-            ->get(['id', 'title', 'remarks', 'image', 'arguments', 'created_at']);
+            ->get();
     }
 
     public function mainDynamicRecommendPostList(string $keyword = null): LengthAwarePaginator
